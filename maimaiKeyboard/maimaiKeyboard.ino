@@ -14,7 +14,7 @@ Bounce debouncer7 = Bounce();
 Bounce debouncer8 = Bounce(); 
 Bounce buttonBounce[] = {debouncer1, debouncer2, debouncer3, debouncer4, debouncer5, debouncer6, debouncer7, debouncer8};
 int buttonPin[] = {2,3,4,5,6,7,8,9};
-char buttonKey[] = {'a','z','e','d','c','x','w','q'};
+char buttonKey[] = {'q','w','e','d','c','x','z','a'};
 bool buttonState[] = {false, false, false, false, false, false, false, false};
 bool previousState[] = {true, true, true, true, true, true, true, true};
 
