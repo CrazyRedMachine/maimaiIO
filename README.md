@@ -14,8 +14,10 @@ Each button has 3 wires, black red and orange
 
 - Wire buttons 1 to 8 orange wires to Arduino gpio 2 to 9
 
+- (optional) wire an additional regular microswitch on gpio 10 and GND
+
 ## Behavior
 
-- maimaiKeyboard maps buttons 1 to 8 to qwedcxza keys (ie. clockwise starting from top left)
+- maimaiKeyboard maps buttons 1 to 8 to qwedcxza keys (ie. clockwise starting from top left), button 9 to 's'
 
-- maimaiJoystick maps them to joystick button 1 to 8
+- maimaiJoystick maps them to joystick button 1 to 9

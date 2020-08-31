@@ -1,37 +1,40 @@
-
+#define BOUNCE_WITH_PROMPT_DETECTION
 #include <Keyboard.h>
 #include <Bounce2.h>
+#define BUTTON_COUNT 8
+#define EXTRA_BUTTON_COUNT 1
+#define TOTAL_BUTTON_COUNT BUTTON_COUNT+EXTRA_BUTTON_COUNT
+#define BOUNCE_INTERVAL 5
 
-#define BUTTON_NUMBER 8
-// Instantiate a Bounce object
-Bounce debouncer1 = Bounce(); 
-Bounce debouncer2 = Bounce(); 
-Bounce debouncer3 = Bounce(); 
-Bounce debouncer4 = Bounce(); 
-Bounce debouncer5 = Bounce(); 
-Bounce debouncer6 = Bounce(); 
-Bounce debouncer7 = Bounce(); 
-Bounce debouncer8 = Bounce(); 
-Bounce buttonBounce[] = {debouncer1, debouncer2, debouncer3, debouncer4, debouncer5, debouncer6, debouncer7, debouncer8};
-int buttonPin[] = {2,3,4,5,6,7,8,9};
-char buttonKey[] = {'q','w','e','d','c','x','z','a'};
-bool buttonState[] = {false, false, false, false, false, false, false, false};
-bool previousState[] = {true, true, true, true, true, true, true, true};
+int buttonPin[] = {2,3,4,5,6,7,8,9,10};
+char buttonKey[] = {'q','w','e','d','c','x','z','a','s'};
+Bounce buttonBounce[TOTAL_BUTTON_COUNT];
+bool buttonState[TOTAL_BUTTON_COUNT];
+bool previousState[TOTAL_BUTTON_COUNT];
 
 void setup() {
 
- for (int i = 0; i < BUTTON_NUMBER; i++){
-   pinMode(buttonPin[i],INPUT_PULLUP);
-   buttonBounce[i].attach(buttonPin[i]);
-   buttonBounce[i].interval(5);
+ for (int i = 0; i < BUTTON_COUNT; i++){
+   buttonBounce[i] = Bounce();
+   buttonBounce[i].attach(buttonPin[i], INPUT_PULLUP);
+   buttonBounce[i].interval(BOUNCE_INTERVAL);
+   buttonState[i] = false;
+   previousState[i] = true;
+  }
+  
+ for (int i = BUTTON_COUNT; i < TOTAL_BUTTON_COUNT; i++){
+   buttonBounce[i] = Bounce();
+   buttonBounce[i].attach(buttonPin[i], INPUT_PULLUP);
+   buttonBounce[i].interval(BOUNCE_INTERVAL);
+   buttonState[i] = false;
+   previousState[i] = false;
   }
   Keyboard.begin();
-
 }
 
 void loop() {
 
-  for (int i = 0; i < BUTTON_NUMBER; i++){
+  for (int i = 0; i < BUTTON_COUNT; i++){
    buttonBounce[i].update();
    buttonState[i] = (buttonBounce[i].read() == HIGH);
    if (buttonState[i] && !previousState[i]) { 
@@ -39,12 +42,19 @@ void loop() {
    } else if (!buttonState[i] && previousState[i]) {
     Keyboard.release(buttonKey[i]);
    }
-  }
-
-  for (int i = 0; i < BUTTON_NUMBER; i++){
    previousState[i] = buttonState[i];
   }
-  
+  for (int i = BUTTON_COUNT; i < TOTAL_BUTTON_COUNT; i++){
+   buttonBounce[i].update();
+   buttonState[i] = (buttonBounce[i].read() == LOW);
+   
+   if (buttonState[i] && !previousState[i]) { 
+    Keyboard.press(buttonKey[i]);
+   } else if (!buttonState[i] && previousState[i]) {
+    Keyboard.release(buttonKey[i]);
+   }
+   previousState[i] = buttonState[i];
+  }
 }
 
 
